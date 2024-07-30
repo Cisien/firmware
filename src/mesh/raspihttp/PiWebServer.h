@@ -30,6 +30,7 @@ class PiWebServerThread
     char *cert_pem = NULL;
     // struct _u_map mime_types;
     std::string webrootpath;
+    std::string cert_path;
 
   public:
     PiWebServerThread();
