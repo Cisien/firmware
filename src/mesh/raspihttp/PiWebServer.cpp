@@ -382,7 +382,7 @@ char *read_file_into_string(const char *filename)
 int PiWebServerThread::CheckSSLandLoad()
 {
     // read certificate
-    cert_path = settingsMap[webservercertpath]
+    cert_path = settingsMap[webservercertpath];
     cert_pem = read_file_into_string(cert_path + "certificate.pem");
     if (cert_pem == NULL) {
         LOG_ERROR("ERROR SSL Certificate File can't be loaded or is missing\n");
@@ -400,7 +400,7 @@ int PiWebServerThread::CheckSSLandLoad()
 
 int PiWebServerThread::CreateSSLCertificate()
 {
-    cert_path = settingsMap[webservercertpath]
+    cert_path = settingsMap[webservercertpath];
     EVP_PKEY *pkey = NULL;
     X509 *x509 = NULL;
 
