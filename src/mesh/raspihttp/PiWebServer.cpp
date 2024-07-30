@@ -22,6 +22,7 @@ Steps to get it running:
     Webserver:
         Port: 9001 # Port for Webserver & Webservices
         RootPath: /home/marc/web # Root Dir of WebServer
+        CertPath: /home/marc/cert #Dir containing certificate.pem and private_key.pem 
 
 3.) Checkout the web project
     https://github.com/meshtastic/web.git
@@ -381,13 +382,14 @@ char *read_file_into_string(const char *filename)
 int PiWebServerThread::CheckSSLandLoad()
 {
     // read certificate
-    cert_pem = read_file_into_string("certificate.pem");
+    certPath = settingsMap[webservercertpath]
+    cert_pem = read_file_into_string(certPath + "certificate.pem");
     if (cert_pem == NULL) {
         LOG_ERROR("ERROR SSL Certificate File can't be loaded or is missing\n");
         return 1;
     }
     // read private key
-    key_pem = read_file_into_string("private_key.pem");
+    key_pem = read_file_into_string(certPath + "private_key.pem");
     if (key_pem == NULL) {
         LOG_ERROR("ERROR file private_key can't be loaded or is missing\n");
         return 2;
@@ -398,7 +400,7 @@ int PiWebServerThread::CheckSSLandLoad()
 
 int PiWebServerThread::CreateSSLCertificate()
 {
-
+    certPath = settingsMap[webservercertpath]
     EVP_PKEY *pkey = NULL;
     X509 *x509 = NULL;
 
@@ -413,7 +415,7 @@ int PiWebServerThread::CreateSSLCertificate()
     }
 
     // Ope file to write private key file
-    FILE *pkey_file = fopen("private_key.pem", "wb");
+    FILE *pkey_file = fopen(certPath + "private_key.pem", "wb");
     if (!pkey_file) {
         LOG_ERROR("Error opening private key file.\n");
         return 3;
@@ -423,7 +425,7 @@ int PiWebServerThread::CreateSSLCertificate()
     fclose(pkey_file);
 
     // open Certificate file
-    FILE *x509_file = fopen("certificate.pem", "wb");
+    FILE *x509_file = fopen(certPath+"certificate.pem", "wb");
     if (!x509_file) {
         LOG_ERROR("Error opening certificate.\n");
         return 4;
