@@ -379,23 +379,16 @@ char *read_file_into_string(const char *filename)
     return buffer; // return pointer
 }
 
-int PiWebServerThread::CheckSSLandLoad()
+int PiWebServerThread::CheckSSLandLoad(const char *certificate, const char *key)
 {
     // read certificate
-    cert_path = settingsMap[webservercertpath];
-<<<<<<< HEAD
-    cert_pem = read_file_into_string(cert_path + "certificate.pem");
-=======
-    string cert = cert_path + "certificate.pem";
-    cert_pem = read_file_into_string(cert.c_str());
->>>>>>> e75747b1 (Add support for reading certificate from a different path on native)
+    cert_pem = read_file_into_string(certificate);
     if (cert_pem == NULL) {
         LOG_ERROR("ERROR SSL Certificate File can't be loaded or is missing\n");
         return 1;
     }
     // read private key
-    string priv_key = cert_path + "private_key.pem"
-    key_pem = read_file_into_string(priv_key.c_str());
+    key_pem = read_file_into_string(key);
     if (key_pem == NULL) {
         LOG_ERROR("ERROR file private_key can't be loaded or is missing\n");
         return 2;
@@ -404,9 +397,8 @@ int PiWebServerThread::CheckSSLandLoad()
     return 0;
 }
 
-int PiWebServerThread::CreateSSLCertificate()
+int PiWebServerThread::CreateSSLCertificate(const char *certificate, const char *key)
 {
-    cert_path = settingsMap[webservercertpath];
     EVP_PKEY *pkey = NULL;
     X509 *x509 = NULL;
 
@@ -421,8 +413,7 @@ int PiWebServerThread::CreateSSLCertificate()
     }
 
     // Ope file to write private key file
-    string priv_key = cert_path + "private_key.pem"
-    FILE *pkey_file = fopen(priv_key.c_str(), "wb");
+    FILE *pkey_file = fopen(key, "wb");
     if (!pkey_file) {
         LOG_ERROR("Error opening private key file.\n");
         return 3;
@@ -432,8 +423,7 @@ int PiWebServerThread::CreateSSLCertificate()
     fclose(pkey_file);
 
     // open Certificate file
-    string cert = cert_path + "certificate.pem";
-    FILE *x509_file = fopen(cert.c_str(), "wb");
+    FILE *x509_file = fopen(certificate, "wb");
     if (!x509_file) {
         LOG_ERROR("Error opening certificate.\n");
         return 4;
@@ -453,10 +443,13 @@ void initWebServer() {}
 PiWebServerThread::PiWebServerThread()
 {
     int ret, retssl, webservport;
+    cert_path = settingsStrings[webservercertpath];
+    std::string cert_file_path = cert_path + "certificate.pem";
+    std::string key_file_path = cert_path + "private_key.pem";
 
-    if (CheckSSLandLoad() != 0) {
-        CreateSSLCertificate();
-        if (CheckSSLandLoad() != 0) {
+    if (CheckSSLandLoad(cert_file_path.c_str(), key_file_path.c_str()) != 0) {
+        CreateSSLCertificate(cert_file_path.c_str(), key_file_path.c_str());
+        if (CheckSSLandLoad(cert_file_path.c_str(), key_file_path.c_str()) != 0) {
             LOG_ERROR("Major Error Gen & Read SSL Certificate\n");
         }
     }

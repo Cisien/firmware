@@ -277,7 +277,7 @@ void portduinoSetup()
         if (yamlConfig["Webserver"]) {
             settingsMap[webserverport] = (yamlConfig["Webserver"]["Port"]).as<int>(-1);
             settingsStrings[webserverrootpath] = (yamlConfig["Webserver"]["RootPath"]).as<std::string>("");
-            settingsStrings[webservercertpath] = (yamlConfig["Webserver"]["CertPath"]).as<std::string>("./")
+            settingsStrings[webservercertpath] = (yamlConfig["Webserver"]["CertPath"]).as<std::string>("./");
         }
 
         settingsMap[maxnodes] = (yamlConfig["General"]["MaxNodes"]).as<int>(200);

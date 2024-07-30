@@ -35,8 +35,8 @@ class PiWebServerThread
   public:
     PiWebServerThread();
     ~PiWebServerThread();
-    int CreateSSLCertificate();
-    int CheckSSLandLoad();
+    int CreateSSLCertificate(const char *certificate, const char *key);
+    int CheckSSLandLoad(const char *certificate, const char *key);
     uint32_t requestRestart = 0;
     struct _u_instance instanceWeb;
     struct _u_instance instanceService;
