@@ -143,6 +143,9 @@ static int32_t reconnectWiFi()
 {
     const char *wifiName = config.network.wifi_ssid;
     const char *wifiPsw = config.network.wifi_psk;
+#ifdef ARCH_ESP32
+    const _meshtastic_Config_NetworkConfig_WiFiTxPower wifiPower = config.network.wifi_power;
+#endif
 
     if (config.network.wifi_enabled && needReconnect) {
 
@@ -167,6 +170,9 @@ static int32_t reconnectWiFi()
             WiFi.mode(WIFI_MODE_NULL);
             WiFi.useStaticBuffers(true);
             WiFi.mode(WIFI_STA);
+#endif
+#ifdef ARCH_ESP32
+            WiFi.setTxPower((wifi_power_t)wifiPower);
 #endif
             WiFi.begin(wifiName, wifiPsw);
         }
@@ -244,6 +250,9 @@ bool initWifi()
 
         const char *wifiName = config.network.wifi_ssid;
         const char *wifiPsw = config.network.wifi_psk;
+#ifdef ARCH_ESP32
+        const _meshtastic_Config_NetworkConfig_WiFiTxPower wifiPower = config.network.wifi_power;
+#endif
 
 #ifndef ARCH_RP2040
 #if !MESHTASTIC_EXCLUDE_WEBSERVER
@@ -273,6 +282,7 @@ bool initWifi()
 #endif
             }
 #ifdef ARCH_ESP32
+            WiFi.setTxPower((wifi_power_t)wifiPower);
             WiFi.onEvent(WiFiEvent);
             WiFi.setAutoReconnect(true);
             WiFi.setSleep(false);

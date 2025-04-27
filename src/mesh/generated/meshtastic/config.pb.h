@@ -147,6 +147,36 @@ typedef enum _meshtastic_Config_NetworkConfig_ProtocolFlags {
     meshtastic_Config_NetworkConfig_ProtocolFlags_UDP_BROADCAST = 1
 } meshtastic_Config_NetworkConfig_ProtocolFlags;
 
+/* values match those defined in wifi_power_t */
+typedef enum _meshtastic_Config_NetworkConfig_WiFiTxPower {
+    /*  */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_DEFAULT = 0,
+    /* 19.5dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_19_5dBm = 78,
+    /* 19dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_19dBm = 76,
+    /* 18.5dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_18_5dBm = 74,
+    /* 17dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_17dBm = 68,
+    /* 15dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_15dBm = 60,
+    /* 13dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_13dBm = 52,
+    /* 11dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_11dBm = 44,
+    /* 8.5dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_8_5dBm = 34,
+    /* 7dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_7dBm = 28,
+    /* 5dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_5dBm = 20,
+    /* 2dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_2dBm = 8,
+    /* -1dBm */
+    meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_MINUS_1dBm = -4
+} meshtastic_Config_NetworkConfig_WiFiTxPower;
+
 /* How the GPS coordinates are displayed on the OLED screen. */
 typedef enum _meshtastic_Config_DisplayConfig_GpsCoordinateFormat {
     /* GPS coordinates are displayed in the normal decimal degrees format:
@@ -441,6 +471,8 @@ typedef struct _meshtastic_Config_NetworkConfig {
     char rsyslog_server[33];
     /* Flags for enabling/disabling network protocols */
     uint32_t enabled_protocols;
+    /* Flag for setting WiFi radio TX power */
+    meshtastic_Config_NetworkConfig_WiFiTxPower wifi_power;
 } meshtastic_Config_NetworkConfig;
 
 /* Display Config */
@@ -632,6 +664,10 @@ extern "C" {
 #define _meshtastic_Config_NetworkConfig_ProtocolFlags_MAX meshtastic_Config_NetworkConfig_ProtocolFlags_UDP_BROADCAST
 #define _meshtastic_Config_NetworkConfig_ProtocolFlags_ARRAYSIZE ((meshtastic_Config_NetworkConfig_ProtocolFlags)(meshtastic_Config_NetworkConfig_ProtocolFlags_UDP_BROADCAST+1))
 
+#define _meshtastic_Config_NetworkConfig_WiFiTxPower_MIN meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_MINUS_1dBm
+#define _meshtastic_Config_NetworkConfig_WiFiTxPower_MAX meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_19_5dBm
+#define _meshtastic_Config_NetworkConfig_WiFiTxPower_ARRAYSIZE ((meshtastic_Config_NetworkConfig_WiFiTxPower)(meshtastic_Config_NetworkConfig_WiFiTxPower_WIFI_POWER_19_5dBm+1))
+
 #define _meshtastic_Config_DisplayConfig_GpsCoordinateFormat_MIN meshtastic_Config_DisplayConfig_GpsCoordinateFormat_DEC
 #define _meshtastic_Config_DisplayConfig_GpsCoordinateFormat_MAX meshtastic_Config_DisplayConfig_GpsCoordinateFormat_OSGR
 #define _meshtastic_Config_DisplayConfig_GpsCoordinateFormat_ARRAYSIZE ((meshtastic_Config_DisplayConfig_GpsCoordinateFormat)(meshtastic_Config_DisplayConfig_GpsCoordinateFormat_OSGR+1))
@@ -672,6 +708,7 @@ extern "C" {
 
 
 #define meshtastic_Config_NetworkConfig_address_mode_ENUMTYPE meshtastic_Config_NetworkConfig_AddressMode
+#define meshtastic_Config_NetworkConfig_wifi_power_ENUMTYPE meshtastic_Config_NetworkConfig_WiFiTxPower
 
 
 #define meshtastic_Config_DisplayConfig_gps_format_ENUMTYPE meshtastic_Config_DisplayConfig_GpsCoordinateFormat
@@ -693,7 +730,7 @@ extern "C" {
 #define meshtastic_Config_DeviceConfig_init_default {_meshtastic_Config_DeviceConfig_Role_MIN, 0, 0, 0, _meshtastic_Config_DeviceConfig_RebroadcastMode_MIN, 0, 0, 0, 0, "", 0}
 #define meshtastic_Config_PositionConfig_init_default {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _meshtastic_Config_PositionConfig_GpsMode_MIN}
 #define meshtastic_Config_PowerConfig_init_default {0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define meshtastic_Config_NetworkConfig_init_default {0, "", "", "", 0, _meshtastic_Config_NetworkConfig_AddressMode_MIN, false, meshtastic_Config_NetworkConfig_IpV4Config_init_default, "", 0}
+#define meshtastic_Config_NetworkConfig_init_default {0, "", "", "", 0, _meshtastic_Config_NetworkConfig_AddressMode_MIN, false, meshtastic_Config_NetworkConfig_IpV4Config_init_default, "", 0, _meshtastic_Config_NetworkConfig_WiFiTxPower_MIN}
 #define meshtastic_Config_NetworkConfig_IpV4Config_init_default {0, 0, 0, 0}
 #define meshtastic_Config_DisplayConfig_init_default {0, _meshtastic_Config_DisplayConfig_GpsCoordinateFormat_MIN, 0, 0, 0, _meshtastic_Config_DisplayConfig_DisplayUnits_MIN, _meshtastic_Config_DisplayConfig_OledType_MIN, _meshtastic_Config_DisplayConfig_DisplayMode_MIN, 0, 0, _meshtastic_Config_DisplayConfig_CompassOrientation_MIN, 0}
 #define meshtastic_Config_LoRaConfig_init_default {0, _meshtastic_Config_LoRaConfig_ModemPreset_MIN, 0, 0, 0, 0, _meshtastic_Config_LoRaConfig_RegionCode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, 0, 0}
@@ -704,7 +741,7 @@ extern "C" {
 #define meshtastic_Config_DeviceConfig_init_zero {_meshtastic_Config_DeviceConfig_Role_MIN, 0, 0, 0, _meshtastic_Config_DeviceConfig_RebroadcastMode_MIN, 0, 0, 0, 0, "", 0}
 #define meshtastic_Config_PositionConfig_init_zero {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _meshtastic_Config_PositionConfig_GpsMode_MIN}
 #define meshtastic_Config_PowerConfig_init_zero  {0, 0, 0, 0, 0, 0, 0, 0, 0}
-#define meshtastic_Config_NetworkConfig_init_zero {0, "", "", "", 0, _meshtastic_Config_NetworkConfig_AddressMode_MIN, false, meshtastic_Config_NetworkConfig_IpV4Config_init_zero, "", 0}
+#define meshtastic_Config_NetworkConfig_init_zero {0, "", "", "", 0, _meshtastic_Config_NetworkConfig_AddressMode_MIN, false, meshtastic_Config_NetworkConfig_IpV4Config_init_zero, "", 0, _meshtastic_Config_NetworkConfig_WiFiTxPower_MIN}
 #define meshtastic_Config_NetworkConfig_IpV4Config_init_zero {0, 0, 0, 0}
 #define meshtastic_Config_DisplayConfig_init_zero {0, _meshtastic_Config_DisplayConfig_GpsCoordinateFormat_MIN, 0, 0, 0, _meshtastic_Config_DisplayConfig_DisplayUnits_MIN, _meshtastic_Config_DisplayConfig_OledType_MIN, _meshtastic_Config_DisplayConfig_DisplayMode_MIN, 0, 0, _meshtastic_Config_DisplayConfig_CompassOrientation_MIN, 0}
 #define meshtastic_Config_LoRaConfig_init_zero   {0, _meshtastic_Config_LoRaConfig_ModemPreset_MIN, 0, 0, 0, 0, _meshtastic_Config_LoRaConfig_RegionCode_MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, 0, 0}
@@ -759,6 +796,7 @@ extern "C" {
 #define meshtastic_Config_NetworkConfig_ipv4_config_tag 8
 #define meshtastic_Config_NetworkConfig_rsyslog_server_tag 9
 #define meshtastic_Config_NetworkConfig_enabled_protocols_tag 10
+#define meshtastic_Config_NetworkConfig_wifi_power_tag 11
 #define meshtastic_Config_DisplayConfig_screen_on_secs_tag 1
 #define meshtastic_Config_DisplayConfig_gps_format_tag 2
 #define meshtastic_Config_DisplayConfig_auto_screen_carousel_secs_tag 3
@@ -889,7 +927,8 @@ X(a, STATIC,   SINGULAR, BOOL,     eth_enabled,       6) \
 X(a, STATIC,   SINGULAR, UENUM,    address_mode,      7) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  ipv4_config,       8) \
 X(a, STATIC,   SINGULAR, STRING,   rsyslog_server,    9) \
-X(a, STATIC,   SINGULAR, UINT32,   enabled_protocols,  10)
+X(a, STATIC,   SINGULAR, UINT32,   enabled_protocols,  10) \
+X(a, STATIC,   SINGULAR, ENUM,     wifi_power,       11)
 #define meshtastic_Config_NetworkConfig_CALLBACK NULL
 #define meshtastic_Config_NetworkConfig_DEFAULT NULL
 #define meshtastic_Config_NetworkConfig_ipv4_config_MSGTYPE meshtastic_Config_NetworkConfig_IpV4Config
@@ -995,12 +1034,12 @@ extern const pb_msgdesc_t meshtastic_Config_SessionkeyConfig_msg;
 #define meshtastic_Config_DisplayConfig_size     32
 #define meshtastic_Config_LoRaConfig_size        85
 #define meshtastic_Config_NetworkConfig_IpV4Config_size 20
-#define meshtastic_Config_NetworkConfig_size     202
+#define meshtastic_Config_NetworkConfig_size     213
 #define meshtastic_Config_PositionConfig_size    62
 #define meshtastic_Config_PowerConfig_size       52
 #define meshtastic_Config_SecurityConfig_size    178
 #define meshtastic_Config_SessionkeyConfig_size  0
-#define meshtastic_Config_size                   205
+#define meshtastic_Config_size                   216
 
 #ifdef __cplusplus
 } /* extern "C" */
